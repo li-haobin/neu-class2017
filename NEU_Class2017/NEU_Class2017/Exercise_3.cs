@@ -10,6 +10,8 @@ namespace NEU_Class2017
     {
         public static void Main()
         {
+            //Analyze(); // 思考题：为什么选择算 24 点，而不是其它？
+
             while (true)
             {
                 Console.WriteLine("========== GET 24 ==========");
@@ -26,6 +28,42 @@ namespace NEU_Class2017
                 catch { break; }
             }
         }
+
+        // 思考题：为什么选择算 24 点，而不是其它？
+        static void Analyze()
+        {
+            Dictionary<int, int> counts = Enumerable.Range(1, 100).ToDictionary(k => k, k => 0);
+            Dictionary<int, List<int>> countsCombs = Enumerable.Range(1, 100).ToDictionary(k => k, k => new List<int>());
+
+            for (int n1 = 0; n1 < 14; n1++)
+            {
+                for (int n2 = 0; n2 < 14; n2++)
+                    for (int n3 = 0; n3 < 14; n3++)
+                        for (int n4 = 0; n4 < 14; n4++)
+                        {
+                            var allIntValues = GetExpr(new int[] { n1, n2, n3, n4 }).Select(expr => expr.Value)
+                                .Where(v => v <= counts.Keys.Max() && (int)v == v);
+                            var hashSet = new HashSet<int>(
+                                allIntValues.Select(v => (int)v).Distinct());
+                            var countCombs = allIntValues.GroupBy(x => x).ToDictionary(g => g.Key, g => g.Count());
+                            foreach (var k in counts.Keys.ToArray())
+                            {
+                                if (hashSet.Contains(k)) counts[k]++;
+                                if (countCombs.ContainsKey(k)) countsCombs[k].Add(countCombs[k]);
+                                else countsCombs[k].Add(0);
+                            }
+                        }
+                Console.Clear();
+                foreach (var i in counts.OrderBy(c => c.Key))
+                {
+                    Console.WriteLine("{0}\t{1}\t{2:F4}", i.Key, i.Value, countsCombs[i.Key].Average());
+                }
+                Console.WriteLine("已完成 {0:F2}%...", 100.0 * (n1 + 1) / 13);
+            }
+        }
+
+        static Dictionary<Tuple<int, int>, List<Expr>> _exprs2 = new Dictionary<Tuple<int, int>, List<Expr>>();
+        static Dictionary<Tuple<int, int, int>, List<Expr>> _exprs3 = new Dictionary<Tuple<int, int, int>, List<Expr>>();
 
         // 给定运算对象数组，返回所有可能的表达式
         static List<Expr> GetExpr(int[] arr)
