@@ -16,11 +16,12 @@ namespace NEU_Class2017
                 Console.WriteLine("====================");
                 Console.WriteLine("Choose the Program");
                 Console.WriteLine("--------------------");
-                Console.WriteLine("1 - Exercise 1");
-                Console.WriteLine("2 - Exercise 2");
-                Console.WriteLine("3 - Exercise 3");
-                Console.WriteLine("4 - Exercise 4");
-                Console.WriteLine("5 - Exercise 5");
+                Console.WriteLine("1 - Exercise 1 ('*' Pattern)");
+                Console.WriteLine("2 - Exercise 2 (SKU-Location)");
+                Console.WriteLine("3 - Exercise 3 (GET 24)");
+                Console.WriteLine("4 - Exercise 4 (O2DES Simulation)");
+                Console.WriteLine("5 - Exercise 5 (Modular Simulation)");
+                Console.WriteLine("6 - Exercise 6 (Math Programming)");
                 Console.WriteLine("====================");
                 Console.Write("Your Choice: ");
 
@@ -45,6 +46,10 @@ namespace NEU_Class2017
                     case "5":
                         Console.WriteLine();
                         Exercise_5.Main();
+                        break;
+                    case "6":
+                        Console.WriteLine();
+                        Exercise_6.Main();
                         break;
                     default:
                         Console.WriteLine("Invalid Input!");
