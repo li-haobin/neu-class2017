@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Google.OrTools.LinearSolver;
 using MathNet.Numerics.Distributions;
 using O2DESNet;
 
@@ -19,6 +20,7 @@ namespace NEU_Class2017
             /******************************************************/
             public double[] HourlyArrivalRates { get; set; }
             public double[,] HourlyServiceRates { get; set; }
+            public bool UseORTool { get; set; } = false;
         }
         #endregion
 
@@ -59,15 +61,57 @@ namespace NEU_Class2017
                 if (idleServers.Count > 0 && This.Waiting.Count > 0)
                 {
                     Log("Start Service");
-                    // 选中首个客户
-                    var customer = This.Waiting.First();
-                    This.Waiting.RemoveAt(0);
-                    // 随机选择任意空闲服务器
-                    var server = idleServers[This.DefaultRS.Next(idleServers.Count)];
-                    // 记录开始服务时间戳
-                    Execute(customer.StartService());
-                    // 开始服务
-                    Execute(server.Start(customer));
+                    if (!This.Config.UseORTool)
+                    {
+                        // 选中首个客户
+                        var customer = This.Waiting.First();
+                        This.Waiting.RemoveAt(0);
+                        // 随机选择任意空闲服务器
+                        var server = idleServers[This.DefaultRS.Next(idleServers.Count)];
+                        // 记录开始服务时间戳
+                        Execute(customer.StartService());
+                        // 开始服务
+                        Execute(server.Start(customer));
+                    }
+                    else
+                    {
+                        // 实例化优化环境
+                        Solver solver = Solver.CreateSolver(name: "MySolver", type: "CBC_MIXED_INTEGER_PROGRAMMING");
+
+                        // 定义决策变量
+                        var assign = solver.MakeBoolVarMatrix(This.Waiting.Count, This.Servers.Length);
+                        var maxTime = solver.MakeNumVar(0, double.PositiveInfinity, "max_time");
+
+                        // 定义约束条件
+                        for (int i = 0; i < This.Waiting.Count; i++)
+                            solver.Add(Enumerable.Range(0, This.Servers.Length).Select(j => assign[i, j])
+                                .ToArray().Sum() == 1); // 每个客户只有唯一服务器
+                        for (int j = 0; j < This.Servers.Length; j++)
+                        {
+                            var totalTime = Enumerable.Range(0, This.Waiting.Count).Select(i => assign[i, j] /
+                                This.Config.HourlyServiceRates[j, This.Waiting[i].Config.Type]).ToArray().Sum();
+                            totalTime += This.Servers[j].Serving
+                                .Select(c => 1 / This.Config.HourlyServiceRates[j, c.Config.Type])
+                                .ToArray().Sum();
+                            solver.Add(totalTime <= maxTime); // 每个服务器的总时间小于最长时间
+                        }
+                        
+                        solver.Minimize(maxTime); // 定义目标函数        
+                        solver.Solve(); // 求解
+
+                        // 使用优化结果
+                        for (int i = 0; i < This.Waiting.Count; i++)
+                            for (int j = 0; j < This.Servers.Length; j++)
+                                if (assign[i, j].SolutionValue() == 1 && This.Servers[j].Vacancy > 0)
+                                {
+                                    var customer = This.Waiting[i];
+                                    This.Waiting.RemoveAt(i);
+                                    var server = This.Servers[j];
+                                    Execute(customer.StartService());
+                                    Execute(server.Start(customer));
+                                    return;
+                                }
+                    }
                 }
             }
         }
