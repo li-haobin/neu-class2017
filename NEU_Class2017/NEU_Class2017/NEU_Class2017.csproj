@@ -51,10 +51,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exercise_5.cs" />
     <Compile Include="Exercise_4.cs" />
     <Compile Include="Exercise_3.cs" />
     <Compile Include="Exercise_1.cs" />
     <Compile Include="Exercise_2.cs" />
+    <Compile Include="Module\Generator.cs" />
+    <Compile Include="Module\Modular_TandemQ.cs" />
+    <Compile Include="Module\Modular_MMnQ.cs" />
+    <Compile Include="Module\Queueing.cs" />
+    <Compile Include="Module\Server.cs" />
     <Compile Include="TandemQueue.cs" />
     <Compile Include="MMnQueue.cs" />
     <Compile Include="Program.cs" />

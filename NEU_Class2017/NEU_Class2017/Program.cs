@@ -20,6 +20,7 @@ namespace NEU_Class2017
                 Console.WriteLine("2 - Exercise 2");
                 Console.WriteLine("3 - Exercise 3");
                 Console.WriteLine("4 - Exercise 4");
+                Console.WriteLine("5 - Exercise 5");
                 Console.WriteLine("====================");
                 Console.Write("Your Choice: ");
 
@@ -40,6 +41,10 @@ namespace NEU_Class2017
                     case "4":
                         Console.WriteLine();
                         Exercise_4.Main();
+                        break;
+                    case "5":
+                        Console.WriteLine();
+                        Exercise_5.Main();
                         break;
                     default:
                         Console.WriteLine("Invalid Input!");
