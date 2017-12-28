@@ -34,6 +34,16 @@ namespace NEU_Class2017
         public Server<Customer>[] Servers { get; private set; }
         public List<Customer> Waiting { get; private set; } = new List<Customer>();
         public List<Customer> Completed { get; private set; } = new List<Customer>();
+
+        // 目标值
+        public TimeSpan CycleTime_Average
+        {
+            get
+            {
+                return TimeSpan.FromMinutes(
+                    Completed.Average(c => (c.DepartTime - c.ArriveTime).TotalMinutes));
+            }
+        }
         #endregion
 
         #region Events

@@ -10,35 +10,21 @@ using O2DESNet.Optimizer;
 
 namespace NEU_Class2017
 {
-    class Exercise_7
+    class Exercise_8
     {
         public static void Main()
         {
+            MOCBA mocba = new MOCBA();
 
-            MoCompass moCompass = new MoCompass(new ConvexSet(dimension: 3, globalLb: 1));
+            var candidates = Enumerable.Range(1, 4)
+                .SelectMany(i => Enumerable.Range(1, 4)
+                .SelectMany(j => Enumerable.Range(1, 4)
+                .Select(k => new StochasticSolution(new double[] { i, j, k }))))
+                .ToList();
 
-            int i = 0;
-            while (true)
-            {
-                Console.WriteLine("Evaluating...");
-                var samples = moCompass.Sample(10, decimals: 0);
-                if (samples.Length == 0) break;
-                foreach (var decs in samples)
-                {
-                    var sol = new StochasticSolution(decs);
-                    Evaluate(sol, useORTool: false);
-                    moCompass.Enter(sol);
-                }
-
-                Console.Clear();
-                Console.WriteLine("Iteration: {0}", i++);
-                foreach (var sol in moCompass.ParetoSet.OrderBy(s => s.Objectives[0])) Console.WriteLine(sol);
-                Console.ReadKey();
-            }
-            Console.WriteLine("End.");
-            Console.ReadKey();
+            
         }
-
+        
         static void Evaluate(StochasticSolution sol, bool useORTool = false)
         {
             // 配置决策变量

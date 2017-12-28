@@ -64,6 +64,9 @@
     <Reference Include="O2DESNet, Version=2.4.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\O2DESNet.2.4.1\lib\net45\O2DESNet.dll</HintPath>
     </Reference>
+    <Reference Include="O2DESNet.Optimizer, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\O2DESNet.Optimizer.1.2.1\lib\net452\O2DESNet.Optimizer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -79,6 +82,7 @@
     <Compile Include="Exercise_3.cs" />
     <Compile Include="Exercise_1.cs" />
     <Compile Include="Exercise_2.cs" />
+    <Compile Include="Exercise_8.cs" />
     <Compile Include="Exercise_7.cs" />
     <Compile Include="Exercise_6.cs" />
     <Compile Include="Module\Generator.cs" />
