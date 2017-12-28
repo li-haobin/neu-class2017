@@ -18,6 +18,7 @@ namespace NEU_Class2017
             /* All static properties shall be public,             */
             /* for both getter and setter.                        */
             /******************************************************/
+            public int[] Capacities { get; set; }
             public double[] HourlyArrivalRates { get; set; }
             public double[,] HourlyServiceRates { get; set; }
             public bool UseORTool { get; set; } = false;
@@ -162,7 +163,7 @@ namespace NEU_Class2017
             Servers = Enumerable.Range(0, nServers)
                 .Select(i => new Server<Customer>(
                     new Server<Customer>.Statics {
-                        Capacity = 1,
+                        Capacity = Config.Capacities[i],
                         ServiceTime = (cstm, rs) => TimeSpan.FromHours(
                             Exponential.Sample(rs, Config.HourlyServiceRates[i, cstm.Config.Type])),
                     }, DefaultRS.Next())).ToArray();

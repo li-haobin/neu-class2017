@@ -9,7 +9,7 @@ using O2DESNet;
 
 namespace NEU_Class2017
 {
-    class Exercise_6
+    class Exercise_7
     {
         public static void Main()
         {
@@ -23,11 +23,10 @@ namespace NEU_Class2017
             {
                 HourlyArrivalRates = new double[] { 10, 20, 30, 40 },
                 HourlyServiceRates = new double[3, 4] {
-                    { 35, 44, 28, 44 },
-                    { 22, 34, 40, 50 },
-                    { 29, 25, 35, 55 }
-                },
-                Capacities = new int[] { 1, 1, 1 },
+                    { 25, 34, 28, 34 },
+                    { 22, 34, 40, 60 },
+                    { 19, 25, 28, 45 }
+                }, 
                 UseORTool = true,
             };
 
