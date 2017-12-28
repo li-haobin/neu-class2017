@@ -26,7 +26,7 @@ namespace NEU_Class2017
                 foreach (var decs in samples)
                 {
                     var sol = new StochasticSolution(decs);
-                    Evaluate(sol, useORTool: false);
+                    Evaluate(sol);
                     moCompass.Enter(sol);
                 }
 
@@ -39,22 +39,26 @@ namespace NEU_Class2017
             Console.ReadKey();
         }
 
-        static void Evaluate(StochasticSolution sol, bool useORTool = false)
+        public static void Evaluate(StochasticSolution sol, int nReps = 1)
         {
             // 配置决策变量
-            var config = GetConfig(useORTool);
+            var config = GetConfig(useORTool: false);
             config.Capacities = sol.Decisions.Select(d => (int)d).ToArray();
-            // 实例化仿真器
-            var state = new MultiServers(config, sol.Observations.Count);
-            Simulator sim = new Simulator(state);
-            // 一次性运行3个小时
-            sim.Run(TimeSpan.FromHours(3));
+            for (int i = 0; i < nReps; i++)
+            {
+                // 实例化仿真器
+                var state = new MultiServers(config, sol.Observations.Count);
+                Simulator sim = new Simulator(state);
+                // 预热1小时，一次性运行3个小时
+                sim.WarmUp(TimeSpan.FromHours(1));
+                sim.Run(TimeSpan.FromHours(3));
 
-            // 添加目标值测量结果
-            sol.Evaluate(new double[] {
-                state.CycleTime_Average.TotalMinutes,
-                config.Capacities.Sum(),
-            });
+                // 添加目标值测量结果
+                sol.Evaluate(new double[] {
+                    state.CycleTime_Average.TotalMinutes,
+                    config.Capacities.Sum(),
+                });
+            }
         }
 
         static MultiServers.Statics GetConfig(bool useORTool)

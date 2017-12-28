@@ -187,7 +187,7 @@ namespace NEU_Class2017
 
         public override void WarmedUp(DateTime clockTime)
         {
-            base.WarmedUp(clockTime);
+            Completed = new List<Customer>();
         }
 
         public override void WriteToConsole(DateTime? clockTime = null)
