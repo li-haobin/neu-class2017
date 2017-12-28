@@ -14,20 +14,21 @@ namespace NEU_Class2017
     {
         public static void Main()
         {
-
+            // 实例化搜索算法引擎
             MoCompass moCompass = new MoCompass(new ConvexSet(dimension: 3, globalLb: 1));
 
             int i = 0;
             while (true)
             {
                 Console.WriteLine("Evaluating...");
-                var samples = moCompass.Sample(10, decimals: 0);
-                if (samples.Length == 0) break;
+                
+                var samples = moCompass.Sample(10, decimals: 0); // 通过搜索算法引擎采样
+                if (samples.Length == 0) break; // 达到局部收敛
                 foreach (var decs in samples)
                 {
-                    var sol = new StochasticSolution(decs);
-                    Evaluate(sol);
-                    moCompass.Enter(sol);
+                    var sol = new StochasticSolution(decs); // 实例化随机解
+                    Evaluate(sol); // 计算随机解
+                    moCompass.Enter(sol); // 返回随机解
                 }
 
                 Console.Clear();
@@ -41,17 +42,14 @@ namespace NEU_Class2017
 
         public static void Evaluate(StochasticSolution sol, int nReps = 1)
         {
-            // 配置决策变量
-            var config = GetConfig(useORTool: false);
-            config.Capacities = sol.Decisions.Select(d => (int)d).ToArray();
+            var config = GetConfig(useORTool: false); // 配置环境参数
+            config.Capacities = sol.Decisions.Select(d => (int)d).ToArray();  // 配置决策变量
             for (int i = 0; i < nReps; i++)
             {
-                // 实例化仿真器
-                var state = new MultiServers(config, sol.Observations.Count);
-                Simulator sim = new Simulator(state);
-                // 预热1小时，一次性运行3个小时
-                sim.WarmUp(TimeSpan.FromHours(1));
-                sim.Run(TimeSpan.FromHours(3));
+                var state = new MultiServers(config, sol.Observations.Count); // 实例化动态属性
+                Simulator sim = new Simulator(state); // 实例化仿真器            
+                sim.WarmUp(TimeSpan.FromHours(1)); // 预热1小时，
+                sim.Run(TimeSpan.FromHours(3)); // 运行3个小时
 
                 // 添加目标值测量结果
                 sol.Evaluate(new double[] {

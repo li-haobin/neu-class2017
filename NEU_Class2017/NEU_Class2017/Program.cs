@@ -24,6 +24,7 @@ namespace NEU_Class2017
                 Console.WriteLine("6 - Exercise 6 (Embedded Math Programming)");
                 Console.WriteLine("7 - Exercise 7 (MO-COMPASS Algrotihm)");
                 Console.WriteLine("8 - Exercise 8 (MOCBA Algrotihm)");
+                Console.WriteLine("9 - Exercise 9 (XML)");
                 Console.WriteLine("====================");
                 Console.Write("Your Choice: ");
 
@@ -60,6 +61,10 @@ namespace NEU_Class2017
                     case "8":
                         Console.WriteLine();
                         Exercise_8.Main();
+                        break;
+                    case "9":
+                        Console.WriteLine();
+                        Exercise_9.Main();
                         break;
                     default:
                         Console.WriteLine("Invalid Input!");
