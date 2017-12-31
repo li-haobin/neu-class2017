@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Google.OrTools;
-using Google.OrTools.LinearSolver;
 using O2DESNet;
 using O2DESNet.Optimizer;
 
@@ -15,8 +13,15 @@ namespace NEU_Class2017
         public static void Main()
         {
             // 实例化搜索算法引擎
-            MoCompass moCompass = new MoCompass(new ConvexSet(dimension: 3, globalLb: 1));
-
+            MoCompass moCompass = new MoCompass(
+                new ConvexSet(dimension: 3, globalLb: 1, globalUb: 10//,
+                //lowerbounds: new double[] { 1, 2, 3, }, upperbounds: new double[] { 10, 20, 30 },
+                //constraints: new List<Constraint> {
+                //    new ConstraintLE(new double[]{ 1, 1, 0}, 30),
+                //    new ConstraintGE(new double[]{ 0, 1, 1}, 10),
+                //}
+                ));
+            
             int i = 0;
             while (true)
             {
@@ -33,7 +38,8 @@ namespace NEU_Class2017
 
                 Console.Clear();
                 Console.WriteLine("Iteration: {0}", i++);
-                foreach (var sol in moCompass.ParetoSet.OrderBy(s => s.Objectives[0])) Console.WriteLine(sol);
+                foreach (var sol in moCompass.ParetoSet.OrderBy(s => s.Objectives[0]))
+                    Console.WriteLine(sol);
                 Console.ReadKey();
             }
             Console.WriteLine("End.");
